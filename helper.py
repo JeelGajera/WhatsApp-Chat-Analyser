@@ -1,4 +1,6 @@
 import pandas as pd
+from urlextract import URLExtract
+extract = URLExtract()
 
 def fetch_stats(selected_user, df):
     if selected_user != 'Overall':
@@ -11,6 +13,9 @@ def fetch_stats(selected_user, df):
     # 3. total media files
     total_media = df[df.message == ('<Media omitted>\n')].shape[0]
     # 4. total links
-    total_links = df[df.message.str.contains('http')].shape[0]
+    links = []
+    for idx, row in df.iterrows():
+        links.extend(extract.find_urls(row['message']))
+    total_links = len(links)
 
     return total_msgs, total_words, total_media, total_links
