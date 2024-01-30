@@ -1,6 +1,6 @@
 import pandas as pd
 from collections import Counter
-from wordcloud import WordCloud
+# from wordcloud import WordCloud
 from urlextract import URLExtract
 import emoji 
 extract = URLExtract()
@@ -31,18 +31,18 @@ def most_busy_users(df):
     per_df = round((df['user'].value_counts()/df.shape[0])*100, 2).reset_index().rename(columns={'count': 'percentage', 'user': 'name'})
     return x, per_df
 
-def create_wordcloud(selected_user, df):
-    if selected_user != 'Overall':
-        df = df[df.user == selected_user]
+# def create_wordcloud(selected_user, df):
+#     if selected_user != 'Overall':
+#         df = df[df.user == selected_user]
 
-    wc = WordCloud(width=760, height=480, min_font_size=10, background_color='white')
-    # remove media ommited msg
-    df = df[df.message != '<Media omitted>\n']
-    #  remove group notification
-    df = df[df.user != 'group_notification']
-    wc.generate(' '.join(df['message']))
-    wc_df = wc.generate(df['message'].str.cat(sep=' '))
-    return wc_df
+#     wc = WordCloud(width=760, height=480, min_font_size=10, background_color='white')
+#     # remove media ommited msg
+#     df = df[df.message != '<Media omitted>\n']
+#     #  remove group notification
+#     df = df[df.user != 'group_notification']
+#     wc.generate(' '.join(df['message']))
+#     wc_df = wc.generate(df['message'].str.cat(sep=' '))
+#     return wc_df
 
 def most_common_words(selected_user, df):
     f = open('stop_words.txt', 'r', encoding='utf-8')

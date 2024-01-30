@@ -117,10 +117,10 @@ if uploaded_file is not None:
                 fig = px.bar(x, x=x.values, y=x.index, orientation='h', )
                 st.plotly_chart(fig)
 
-        # Word Cloud
-        st.title("🌨️ Word Cloud")
-        word_cloud = helper.create_wordcloud(selected_user, df)
-        st.image(word_cloud.to_image())
+        # # Word Cloud
+        # st.title("🌨️ Word Cloud")
+        # word_cloud = helper.create_wordcloud(selected_user, df)
+        # st.image(word_cloud.to_image())
 
         # Most Common Words
         st.title("🤐 Most Common Words")
