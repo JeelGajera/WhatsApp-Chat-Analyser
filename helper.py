@@ -35,7 +35,7 @@ def create_wordcloud(selected_user, df):
     if selected_user != 'Overall':
         df = df[df.user == selected_user]
 
-    wc = WordCloud(width=500, height=300, min_font_size=10, background_color='white')
+    wc = WordCloud(width=760, height=480, min_font_size=10, background_color='white')
     # remove media ommited msg
     df = df[df.message != '<Media omitted>\n']
     #  remove group notification
@@ -78,3 +78,29 @@ def most_common_emojis(selected_user, df):
     top_20 = Counter(emojis).most_common(20)
     top_20 = pd.DataFrame(top_20).rename(columns={0: 'emoji', 1: 'count'})
     return top_20
+
+
+def monthly_timeline(selected_user, df):
+    if selected_user != 'Overall':
+        df = df[df.user == selected_user]
+
+    timeline = df.groupby(['year', 'month']).count()['message'].reset_index()
+    timeline['period'] = timeline['month'].astype(str) + '-' + timeline['year'].astype(str)
+    return timeline
+
+def daily_timeline(selected_user, df):
+    if selected_user != 'Overall':
+        df = df[df.user == selected_user]
+
+    daily_timeline = df.groupby(df['date'].dt.date).count()['message'].reset_index()
+    return daily_timeline
+
+def weekly_activity_map(selected_user, df):
+    if selected_user != 'Overall':
+        df = df[df.user == selected_user]
+    return df['day_name'].value_counts()
+
+def monthly_activity_map(selected_user, df):
+    if selected_user != 'Overall':
+        df = df[df.user == selected_user]
+    return df['month'].value_counts()

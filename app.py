@@ -40,7 +40,7 @@ if uploaded_file is not None:
     if st.sidebar.button("Show Analysis"):
 
         # Stats Area
-        st.title("Top Statistics")
+        st.title("📊 Top Statistics")
         num_msg, num_words, total_media, total_links = helper.fetch_stats(selected_user, df)
         c1, c2, c3, c4 = st.columns(4)
 
@@ -60,43 +60,71 @@ if uploaded_file is not None:
             st.header("Total Links")
             st.title(total_links)
 
+        # Timeline Analysis
+        st.title(f"🗓️ Timeline Analysis Statistics of {selected_user}")
+
+        # Monthly Timeline
+        st.header("Monthly Timeline")
+        timeline_df = helper.monthly_timeline(selected_user, df)
+        fig = px.line(timeline_df, x='period', y='message')
+        st.plotly_chart(fig)
+
+        # Daily Timeline
+        st.header("Daily Timeline")
+        timeline_df = helper.daily_timeline(selected_user, df)
+        fig = px.line(timeline_df, x='date', y='message')
+        st.plotly_chart(fig)
+
+        # Activity Map
+        c1, c2 = st.columns(2)
+        with c1:
+            st.header("Monthly Activity Map")
+            monthly_activity_df = helper.monthly_activity_map(selected_user, df)
+            fig = px.bar(monthly_activity_df, x=monthly_activity_df.index, y=monthly_activity_df.values)
+            fig.update_xaxes(title_text='Months')
+            fig.update_yaxes(title_text='Counts')
+            st.plotly_chart(fig)
+
+        with c2:
+            st.header("Weekly Activity Map")
+            weekly_activity_df = helper.weekly_activity_map(selected_user, df)
+            fig = px.pie(weekly_activity_df, values=weekly_activity_df.values, names=weekly_activity_df.index)
+            st.plotly_chart(fig)
+
         # Top Users Activity
         if selected_user == 'Overall':
-            st.title("Users Activity")
+            st.title("🧑‍💻 Users Activity")
             c1, c2 = st.columns(2)
 
             with c1:
-                st.header("Most Busy Users")
                 x, per_df = helper.most_busy_users(df)
+                st.header("Individual Contribution")
+                st.dataframe(per_df)
+            with c2:
+                st.header("Most Busy Users")
                 fig = px.bar(x, x=x.values, y=x.index, orientation='h', )
                 st.plotly_chart(fig)
 
-            with c2:
-                st.header("Individual Contribution")
-                st.dataframe(per_df)
-
         # Word Cloud
-        st.title("Word Cloud")
+        st.title("🌨️ Word Cloud")
         word_cloud = helper.create_wordcloud(selected_user, df)
         st.image(word_cloud.to_image())
 
         # Most Common Words
-        st.title("Most Common Words")
+        st.title("🤐 Most Common Words")
         most_common_words = helper.most_common_words(selected_user, df)
         fig = px.bar(most_common_words, x='word', y='count')
         st.plotly_chart(fig)
 
         # Most Common Emojis
-        st.title("Most Common Emojis")
+        st.title("😎 Most Common Emojis")
         emoji_df = helper.most_common_emojis(selected_user, df)
-
-        # create pie chart 
         fig = px.pie(emoji_df, values='count', names='emoji')
         st.plotly_chart(fig)
 
 
     
-        st.title('Preprocessed Chat Data')
+        st.title('🛠️ Pre-Processed Chat Data')
         st.dataframe(df)
     else:
         st.title("WhatsApp Chat Analysis 📊")
