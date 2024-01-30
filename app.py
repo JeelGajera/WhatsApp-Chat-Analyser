@@ -2,6 +2,19 @@ import streamlit as st
 import pre_processor, helper
 import plotly.express as px
 
+# set page configuration
+st.set_page_config(
+    page_title="WhatsApp Chat Analysis",
+    page_icon="https://img.icons8.com/3d-fluency/94/combo-chart.png",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': "https://github.com/JeelGajera/WhatsApp-Chat-Analyser",
+        'Report a bug': "https://github.com/JeelGajera/WhatsApp-Chat-Analyser/issues",
+        'About': "This Python project is designed to analyze WhatsApp chat data, providing valuable insights and visualizations from the conversation history. The script processes exported chat text files and extracts relevant information for in-depth analysis."
+    }
+)
+
 # create title with  
 st.sidebar.image("https://www.freepnglogos.com/uploads/whatsapp-logo-light-green-png-0.png", width=150)
 st.sidebar.title("WhatsApp Chat Analysis 📊")
@@ -16,7 +29,6 @@ if uploaded_file is not None:
     bytes_data = uploaded_file.getvalue()
     data = bytes_data.decode("utf-8")
     df = pre_processor.preprocess(data)
-    st.dataframe(df)
 
     # fetch unque user
     user_list = df.user.unique().tolist()
@@ -28,6 +40,7 @@ if uploaded_file is not None:
     if st.sidebar.button("Show Analysis"):
 
         # Stats Area
+        st.title("Top Statistics")
         num_msg, num_words, total_media, total_links = helper.fetch_stats(selected_user, df)
         c1, c2, c3, c4 = st.columns(4)
 
@@ -76,8 +89,28 @@ if uploaded_file is not None:
         # Most Common Emojis
         st.title("Most Common Emojis")
         emoji_df = helper.most_common_emojis(selected_user, df)
+
         # create pie chart 
         fig = px.pie(emoji_df, values='count', names='emoji')
         st.plotly_chart(fig)
 
 
+    
+        st.title('Preprocessed Chat Data')
+        st.dataframe(df)
+    else:
+        st.title("WhatsApp Chat Analysis 📊")
+        st.info("Click on Show Analysis button to start analysis")
+
+else:
+    # show info if data is not uploaded
+    st.title("WhatsApp Chat Analysis 📊")
+    st.info("Upload your WhatsApp Chat data")
+
+# add footer to sidebar
+st.sidebar.markdown(
+    """
+    <div> <strong>< /></strong> with ❤️ by <a href="https://github.com/JeelGajera" target="_blank" style="text-decoration: none; color: white; text-decoration: underline;">Jeel Gajera</a> </div>
+    """,
+    unsafe_allow_html=True
+)
