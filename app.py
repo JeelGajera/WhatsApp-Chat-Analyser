@@ -91,6 +91,18 @@ if uploaded_file is not None:
             fig = px.pie(weekly_activity_df, values=weekly_activity_df.values, names=weekly_activity_df.index)
             st.plotly_chart(fig)
 
+        # Activity Heatmap
+        st.header("Activity Heatmap")
+        activity_df = helper.activity_heatmap(selected_user, df)
+        fig = px.imshow(
+            activity_df.values, x=activity_df.columns, y=activity_df.index,
+            labels=dict(y="Day of Week", x="Hour of Day", color="Total Messages"),
+            text_auto=True, aspect="auto"
+            )
+        st.plotly_chart(fig)
+
+        
+
         # Top Users Activity
         if selected_user == 'Overall':
             st.title("🧑‍💻 Users Activity")
