@@ -1,7 +1,7 @@
 streamlit
 pandas
 plotly
-worldcloud
+wordcloud
 urlextract
 emoji
 seaborn
